@@ -1,0 +1,47 @@
+% plotting signal u(t) as a Fourier series
+
+clc; clear;
+close all;
+%% changing n
+load('Q1_2.mat')  % read signal(xt,t,n_vec)
+T = t(length(t))-t(1);
+dt = t(2)-t(1);
+cnt = 1;
+figure;
+plot(t,xt,'DisplayName', 'tri','linewidth',1.5); % plot original signal
+hold on; 
+error = 0.*length(n_vec); 
+for n=n_vec
+[xhat,ck] = ffs(xt,t,n,T); % call ffs function 
+plot(t,xhat, 'DisplayName', num2str(n));
+hold on;
+error(cnt) = sum((xhat - xt).^2)*dt;
+cnt = cnt + 1;
+end
+legend('Location','eastoutside');
+hold off;
+
+figure(2);
+plot(n_vec,error);
+xlabel('n value'); ylabel('square error'); 
+%% changing T
+load('Q1_3.mat')  % read signal(ut,t,n_vec)
+
+figure(3);
+plot(t,ut,'DisplayName', 'sin','linewidth',1.5); hold on;  % plot signal
+error = 0.*length(T_vec);  % initialize error vector
+cnt = 1;
+n=6;             % smallest value
+for T=T_vec 
+dt = t(2)-t(1);
+[xhat,ck] = ffs(ut,t,n,T);  % call ffs function
+plot(t,xhat, 'DisplayName', num2str(T));
+hold on;
+error(cnt) = sum((xhat - ut).^2)*dt;
+cnt = cnt + 1;
+end
+legend('Location','eastoutside');
+hold off;
+figure(4);
+plot(T_vec,error);
+xlabel('T value'); ylabel('square error'); 
