@@ -1,0 +1,64 @@
+% exploration of quantization techniques
+% producing grayscale image once through uniform quantization and then through selective quantization
+
+clc
+clear
+close all
+%%
+load('Q3.mat')   % read data
+figure
+imshow(img)      % show original image
+title("Original image")
+imgq = quan(img,127,[0,255]);
+figure(2)
+imshow(imgq) % show quantized image
+title("Quantized image,thr = 127, lvl = [0 255]")
+%% uniform quantization
+n = 8;  %Divide the set {0, 255} into eight disjoint sets of the same size.
+v = 1:n-1;
+thr = v*(256/n)-1;
+lvl = level(thr,n);
+imgq1 = quan(img,thr,lvl);
+figure(3)
+imshow(imgq1)
+title("Uniform Quantization")
+MSE = mser(img,imgq1);
+disp("Uniform Quantization Results:");
+disp("Quantization Thresholds (thr1,...,thr7):");disp(thr);
+disp("Quantization Levels (lvl1,...,lvl8):");disp(lvl);
+disp("MSE is:");disp(MSE);    %to display threshold, level and MSE
+%% selective quantization
+pv = 12.5:12.5:87.5;        %create percentile vector
+thr = prctile(img,pv,'all');
+lvl = level(thr,n);
+imgq2 = quan(img,thr,lvl);
+figure(4)
+imshow(imgq2)
+title("Selective Quantization")
+MSE = mser(img,imgq2);
+disp("Selective Quantization Results:");
+disp("Quantization Thresholds (thr1,...,thr7):");disp(thr);
+disp("Quantization Levels (lvl1,...,lvl8):");disp(lvl);
+disp("MSE is:");disp(MSE);    %to display threshold, level and MSE
+%% lvl and MSE functions
+function lvl = level(thr,n)
+    lvl = zeros(1,n);             % initialize level vector
+    lvl(1) = (thr(1)/2);          %to get center point of first set
+    for i = 2:n-1
+        lvl(i) = (thr(i-1)+(thr(i)-thr(i-1)+1)/2);   %to get center point of each set
+    end
+    lvl(n) = (thr(n-1)+(255-thr(n-1)+1)/2);          %to get center point of last set
+    lvl = uint8(lvl);             % to get uint8 value
+end
+function MSE = mser(p,q)
+    MSE = 0;
+    [m,n]=size(p);
+    for i =1:m
+        for j=1:n
+            a = double(p(i,j));
+            b = double(q(i,j));
+            MSE = MSE + (a-b)^2;           
+        end
+    end
+    MSE = MSE/(m*n);  %divide by total number of pixels  
+end
