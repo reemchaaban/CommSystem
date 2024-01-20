@@ -1,0 +1,16 @@
+% reconstruction of sampled signal 
+
+function xrcon = reconstruct(t,x_sample,fs)
+    ts = 1/fs;
+    n = (length(x_sample)-1)/2;
+    i = 0;   
+    xrcon= zeros(1,length(t));
+    for ti = t
+        i = i + 1;temp = 0;
+        for k = -n:n            
+           % x(kTs) is kth value of  signal that sampling rate is Ts.. i.e x_sample(k+n+1)
+           temp = temp + x_sample(k+n+1) * sinc(ti/ts - k);   
+        end
+        xrcon(i) = temp;
+    end
+end
