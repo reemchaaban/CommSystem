@@ -1,0 +1,15 @@
+% sampling signal x(t) = cos(2pif0t) at fs = 1/Ts
+
+function[t_sample,x_sample] = sample(t,xt,fs)
+    n = length(t)-1;   
+    T = t(n+1)-t(1); 
+    dt = T/n;      % time interval of source signal      
+    Ts = 1/fs;     % sampling period  
+    x_sample(1) = xt(1);          % starting from first point 
+    t_sample(1) = t(1);           % starting from first point 
+    for i = 1:floor(T/Ts)        
+        ix = floor(i*Ts/dt)+1;
+        x_sample(i+1) = xt(ix);
+        t_sample(i+1) = t(ix);
+    end    
+end
