@@ -1,0 +1,29 @@
+clc; clear; close all;
+%%
+n=1000;n1=round(n/2);n0=n-n1;
+b = [ones(1, n1), zeros(1, n0)];    % create n1 of 1, n0 of 0.
+b = b(randperm(n));        % random permutation.
+A = 10;
+x = bpsk_mod(b,A) ;           %binary phase shift keying (BPSK) modulation 
+b1 = bpsk_demod(x) ;   %binary phase shift keying (BPSK) demodulation
+x = qpsk_mod(b,A) ;           % phase-shifted quadrature phase shift keying (QPSK) modulation.
+b2 = qpsk_demod(x) ;  %  demodulation
+isequal(b,b1)
+isequal(b,b2)
+%%
+Es = 100;
+snr_v = 1:1:50;       % signal-to-noise ratio (SNR) is thus Es/En.
+biterror = zeros(1,length(snr_v));  % initialize  vector of bit error.
+i=0;
+for snr = snr_v
+    i = i+1;
+    A=sqrt(Es);
+    x = qpsk_mod(b,A) ;   
+    y = awgn(x,snr,'measured');
+    bn = qpsk_demod(y);
+    biterror(i) = length(find(b-bn));   % to calculate number of error bits
+end
+figure
+plot(snr_v,biterror);
+xlabel('SNR');ylabel(['bit error,  n = ' num2str(n)]);
+title('bit error rates vs SNR')
