@@ -1,0 +1,50 @@
+% sampling x(t) = cos(2pif0t) at f0 = 1 Hz
+% determining Nyquist rate fN = 1/TN to reconstruct signal perfectly
+
+clc; clear; close all;
+load('Q2.mat')   % read signal
+f0 = 1;        % signal frequency  
+%% plot original signal
+figure;
+plot(t,xt)     % original signal (Q2.mat)
+title('Original Signal')
+legend('Q2.mat');
+%% calculate nyquist frequency
+fn =  2*f0;              %lowest sampling rate.. Nyquist rate
+%% in case of f = 2*fn
+[t_sample,x_sample] = sample(t,xt,2*fn);      % call sample function
+xrcon = reconstruct(t,x_sample,2*fn);  % call reconstruct function
+f = figure(2);
+f.Position = [100 100 1200 400];              % setting position and size figure
+subplot(1,2,1);  
+plot(t_sample,x_sample,'.')  %sampled
+legend('Sampling Rate of 2*fn')
+title('Sampling Signal in 2*fn')
+subplot(1,2,2);
+plot(t,xrcon,'r')    %reconstructed
+legend('Reconstruction');
+title('Reconstructed Signal')
+%% in case of f = 0.5*fn
+[t_sample,x_sample] = sample(t,xt,0.5*fn);       % call sample function
+xrcon = reconstruct(t,x_sample,0.5*fn);   % call reconstruct function
+f = figure(3);
+f.Position = [200 200 1200 400];                % setting position and size figure
+subplot(1,2,1);
+plot(t_sample,x_sample,'.')   %sampled
+legend('Sampling Rate of 0.5*fn')
+title('Sampling Signal in 0.5*fn')
+subplot(1,2,2);
+plot(t,xrcon,'r')    %reconstructed
+legend('Reconstruction');
+title('Reconstructed Signal')
+%%  graph of cos(2*pi*f*t) and plot of cos(0),cos(+_2*pi/4), cos(+_2*pi/2)...
+f = figure(4);
+f.Position = [220 220 1200 400];
+subplot(1,2,1);
+plot(t,xt,'.')
+title('Cos Signal')
+xlim([-2*pi 2*pi])
+[t_sample,x_sample] = sample(t,xt,4);
+subplot(1,2,2);
+plot(t_sample,x_sample,'.');
+title('Sampled Version');
