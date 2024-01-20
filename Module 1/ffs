@@ -1,0 +1,15 @@
+#Finite fourier series of time-limited signal x(t)
+
+function [xhat,ck] = ffs(xt,t,n,T)
+     N = (length(xt)-1)/2; % calculation numbers of signal points
+     ck = zeros(1,2*n+1); 
+     xhat = zeros(1,2*N+1); 
+     for k = -n:n
+        ck(k+n+1) = 1/T *sum(xt.*exp((-2*pi*1j*k*t)/T))*(t(2)-t(1)); % ck's  
+     end
+     for r = 1:2*N+1
+         for k = -n:n             
+           xhat(r) = xhat(r) +  real(ck(k+n+1)*exp(2*pi*1j*k*t(r)/T)); % xhat
+         end
+     end  
+end
