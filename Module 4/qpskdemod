@@ -1,0 +1,9 @@
+function b = qpsk_demod(x)
+    b = zeros(1,length(x)*2);
+    for i=1:length(x)
+        if real(x(i))>=0 && imag(x(i))>=0; b(i*2-1) =1;b(i*2)=1; end
+        if real(x(i))<0  && imag(x(i))>=0; b(i*2-1) =1;b(i*2)=0; end
+        if real(x(i))<0  && imag(x(i))<0;  b(i*2-1) =0;b(i*2)=0; end
+        if real(x(i))>=0 && imag(x(i))<0;  b(i*2-1) =0;b(i*2)=1; end
+    end    
+end
