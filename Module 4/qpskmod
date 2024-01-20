@@ -1,0 +1,10 @@
+function x = qpsk_mod(b,A)
+    n = length(b);
+    x = zeros(1,floor(n/2));
+    for i = 1:floor(n/2)
+        if b(i*2-1)==1 && b(i*2)==1;  x(i)=A/sqrt(2)*(1+1j); end
+        if b(i*2-1)==1 && b(i*2)==0;  x(i)=A/sqrt(2)*(-1+1j); end
+        if b(i*2-1)==0 && b(i*2)==0;  x(i)=A/sqrt(2)*(-1-1j); end
+        if b(i*2-1)==0 && b(i*2)==1;  x(i)=A/sqrt(2)*(1-1j); end
+    end
+end
